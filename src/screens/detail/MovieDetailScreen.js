@@ -11,7 +11,7 @@ const MovieDetailScreen = () => {
     return (
         <View style={styles.container}>
             {/* Hình ảnh cố định ở trên cùng */}
-            <Image source={require("../../assets/Breaking Bad/breaking-bad-season-1.jpg")} style={styles.poster} />
+            <Image source={require("../../../assets/Breaking Bad/breaking-bad-season-1.jpg")} style={styles.poster} />
 
             {/* Nút quay trở về */}
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
