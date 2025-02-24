@@ -1,3 +1,4 @@
+
 import React, {useRef, useState, useEffect} from "react";
 import {View, Text, Image, ScrollView, StyleSheet, Button, TouchableOpacity} from "react-native";
 import {useNavigation} from "@react-navigation/native";
@@ -62,15 +63,21 @@ const MovieDetailScreen = () => {
         console.log(positionX, positionY);
     };
 
-    return (
-        <View style={styles.container}>
-            {/* Hình ảnh cố định ở trên cùng */}
-            <Image source={require("../../../assets/Breaking Bad/breaking-bad-season-1.jpg")} style={styles.poster} />
+  return (
+    <View style={styles.container}>
+      {/* Hình ảnh cố định ở trên cùng */}
+      <Image
+        source={require("../../../assets/Breaking Bad/breaking-bad-season-1.jpg")}
+        style={styles.poster}
+      />
 
-            {/* Nút quay trở về */}
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                <FontAwesome name="arrow-left" size={28} color="#fff" />
-            </TouchableOpacity>
+      {/* Nút quay trở về */}
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.navigate("home")}
+      >
+        <FontAwesome name="arrow-left" size={28} color="#fff" />
+      </TouchableOpacity>
 
             {/* Nội dung bên dưới */}
             <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -131,7 +138,9 @@ const MovieDetailScreen = () => {
                 <RelatedMovies movies={relatedMovies} onScroll={this.handleScroll} scrollEventThrottle={16} />
             </ScrollView>
         </View>
-    );
+      </ScrollView>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
