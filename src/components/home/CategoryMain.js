@@ -12,7 +12,7 @@ const CategoryMain = ({ topic, data, renderItem, navigation }) => {
     <View style={styles.container}>
       <View style={styles.heading}>
         <View style={styles.titleCategory}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableOpacity onPress={() => navigation.navigate("HomeMovies")}>
             <Image
               style={styles.iconBack}
               source={require("../../../assets/home/icon-back.png")}
