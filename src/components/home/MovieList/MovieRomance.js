@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { FlatList, View, Text, Image, StyleSheet } from "react-native";
-import CategoryMain from "./CategoryMain";
+import { Text, Image, StyleSheet } from "react-native";
+import CategoryMain from "../CategoryMain";
 
 const movies = [
   {
@@ -67,7 +67,7 @@ const movies = [
   },
   // thêm nhiều bộ phim nếu cần
 ];
-const CategoryKid = ({ topic = "Kid's Movie" }) => {
+const CategoryRomance = ({ topic = "Romance" }) => {
   const navigation = useNavigation();
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -142,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoryKid;
+export default CategoryRomance;
