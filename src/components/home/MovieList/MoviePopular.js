@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Text, Image, StyleSheet } from "react-native";
-import CategoryMain from "./CategoryMain";
+import CategoryMain from "../CategoryMain";
 
 const movies = [
   {

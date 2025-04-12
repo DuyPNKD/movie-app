@@ -8,21 +8,15 @@ import {
   StyleSheet,
 } from "react-native";
 
-const CategoryHome = ({ title, data, navigation }) => (
+const CategoryHome = ({ title, data, component, navigation }) => (
   <View style={styles.category}>
     <View style={styles.groupIntro}>
       <View style={styles.titleContainer}>
-        <Image
-          style={styles.redLine}
-          source={require("../../../assets/home/redline.png")}
-        />
         <Text style={styles.categoryTitle}>{title}</Text>
       </View>
       {/* Nút See All */}
-      <TouchableOpacity
-        onPress={() => navigation.navigate("MovieDetail", { title, data })}
-      >
-        <Text style={styles.seeAll}>See All</Text>
+      <TouchableOpacity onPress={() => navigation.navigate(component)}>
+        <Text style={styles.seeAll}>Xem tất cả</Text>
       </TouchableOpacity>
     </View>
     <FlatList
