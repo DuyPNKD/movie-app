@@ -7,21 +7,21 @@ const HeaderMovie = () => {
     <View style={styles.header}>
       <View style={styles.headerLeft}>
         <Image
-          source={require("../../../assets/home/icon-video.png")}
+          source={require("../../../../assets/home/icon-video.png")}
           style={styles.logo}
         />
-        <Text style={styles.titleBrand}>Animax</Text>
+        <Text style={styles.titleBrand}>Phimz</Text>
       </View>
       <View style={styles.headerRight}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("SearchMovie")}>
           <Image
-            source={require("../../../assets/home/icon-search.png")}
+            source={require("../../../../assets/home/icon-search.png")}
             style={styles.icon}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.openDrawer()}>
           <Image
-            source={require("../../../assets/home/menu-icon.png")}
+            source={require("../../../../assets/home/menu-icon.png")}
             style={styles.menuIcon}
           />
         </TouchableOpacity>
@@ -46,13 +46,14 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: "row",
     alignItems: "center",
+    marginLeft: 10,
   },
   logo: {
-    width: 24,
-    height: 24,
+    width: 35,
+    height: 35,
   },
   titleBrand: {
-    color: "red",
+    color: "white",
     fontSize: 18,
     fontWeight: "bold",
     paddingLeft: 8,
@@ -61,8 +62,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 21,
+    height: 21,
     marginHorizontal: 8,
   },
   menuIcon: {

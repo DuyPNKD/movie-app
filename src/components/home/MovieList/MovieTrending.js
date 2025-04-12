@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { FlatList, View, Text, Image, StyleSheet } from "react-native";
-import CategoryMain from "./CategoryMain";
+import CategoryMain from "../CategoryMain";
 
 const movies = [
   {
@@ -67,7 +67,7 @@ const movies = [
   },
   // thêm nhiều bộ phim nếu cần
 ];
-const CategoryRecommend = ({ topic = "Recommended" }) => {
+const CategoryTrending = ({ topic = "Trending" }) => {
   const navigation = useNavigation();
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -142,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoryRecommend;
+export default CategoryTrending;
