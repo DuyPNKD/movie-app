@@ -19,13 +19,13 @@ const CategoryMain = ({ topic, data, renderItem, navigation }) => {
             />
           </TouchableOpacity>
           <Text style={styles.header}>{topic}</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("SearchMovie")}>
+            <Image
+              style={styles.iconSearch}
+              source={require("../../../assets/home/icon-search.png")}
+            />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => alert("Hello")}>
-          <Image
-            style={styles.iconSearch}
-            source={require("../../../assets/home/icon-search.png")}
-          />
-        </TouchableOpacity>
       </View>
       <FlatList
         data={data}
@@ -50,22 +50,27 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   titleCategory: {
+    flex: 1,
     flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   iconBack: {
     height: 25,
     width: 25,
     margin: 5,
-    marginRight: 10,
   },
   header: {
     color: "#fff",
     fontSize: 22,
-    marginBottom: 10,
     fontWeight: "bold",
+    flex: 1,
+    textAlign: "center",
   },
   iconSearch: {
-    margin: 15,
+    height: 24,
+    width: 24,
+    margin: 5,
   },
 
   title: {
