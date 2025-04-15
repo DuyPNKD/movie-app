@@ -34,6 +34,14 @@ const SearchMovie = ({ navigation }) => {
       image: require("../../../assets/home/home.png"),
     },
     // Thêm kết quả tìm kiếm khác
+    {
+      id: 2,
+      title: "Avengers: Hồi Kết",
+      year: "2019",
+      type: "movie",
+      rating: "8.4",
+      image: require("../../../assets/home/home.png"),
+    },
   ];
 
   const renderFilter = ({ item }) => (
@@ -144,7 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
-    paddingTop: 45 ,
+    paddingTop: 45,
     gap: 12,
   },
   backButton: {
