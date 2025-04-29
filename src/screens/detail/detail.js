@@ -1,6 +1,14 @@
-import React, {useRef, useState, useEffect} from "react";
-import {View, Text, Image, FlatList, StyleSheet, TouchableOpacity, Modal} from "react-native";
-import {useNavigation, useRoute} from "@react-navigation/native";
+import React, { useRef, useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Modal,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Footer from "../../components/home/Footer";
 import {useAuth} from "../../context/AuthContext";
@@ -49,14 +57,17 @@ const DetailPage = () => {
         }
     };
 
+
     const handleLoginPress = () => {
         setShowLoginModal(false);
         setShowAuthModal(true);
     };
 
+
     const handleCloseAuthModal = () => {
         setShowAuthModal(false);
     };
+
 
     // Dữ liệu cho FlatList
     const data = [
@@ -203,7 +214,7 @@ const DetailPage = () => {
             {showAuthModal && <AuthModal visible={showAuthModal} onClose={handleCloseAuthModal} />}
         </View>
     );
-};
+
 
 const styles = StyleSheet.create({
     container: {

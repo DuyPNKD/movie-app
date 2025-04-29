@@ -58,18 +58,69 @@ const HomeMovie = ({ navigation }) => {
   const trailers = [
     {
       id: 1,
-      video: require("../../../assets/home/trailer.mp4"),
-      title: "Cô Gái Nhỏ 2024",
+      video: require("../../../assets/media/Pho bien/Bàn Tay Diệt Quỷ/The Divine Fury Trailer #1 (2019) - Movieclips Indie.mp4"),
+      title: "Bàn Tay Diệt Quỷ",
+      posterUrl: require("../../../assets/media/Pho bien/Bàn Tay Diệt Quỷ/7be7a0c1b3f193b5557ef4f00b1f05d9.webp"),
+      rating: "6.3",
+      year: "2019",
+      genres: ["Hành Động", "Gay Cấn", "Kinh Dị", "Phiêu Lưu"],
+      description:
+        "Võ sĩ MMA Yong Hoo (Park Seo Joon thủ vai) đã dấn thân vào hành trình trừ tà, trục quỷ sau khi bản thân anh bống nhiên sở hữu “Bàn tay diệt quỷ”. Đối đầu với anh là Giám Mục Bóng Tối (Woo Do Hwan thủ vai) – tên quỷ Satan đột lốt người. Kể từ đó sự thật về cái chết của cha Yong Hoo cũng dần được hé lộ cũng như nguyên nhân anh trở thành “người được chọn”.",
+      duration: "2h 09m",
+      country: "Hàn Quốc",
+      directors: ["Kim Joo-hwan"],
+      actors: [
+        "Park Seo-jun",
+        "Ahn Sung-ki",
+        "Woo Do-hwan",
+        "Choi Woo-shik",
+        "Park Ji-hyun",
+        "Jung Ji-hoon",
+        "Lee Seung-hee",
+        "Sim Hee-seop",
+      ],
+      views: "150000",
     },
+
     {
       id: 2,
-      video: require("../../../assets/home/trailer.mp4"),
-      title: "Sonic the Hedgehog 3",
+      video: require("../../../assets/media/Moi phat hanh/Khi Cuộc Đời Cho Bạn Quả Quýt/When Life Gives You Tangerines - Official Trailer - Netflix.mp4"),
+      title: "Khi Cuộc Đời Cho Bạn Quả Quýt",
+      posterUrl: require("../../../assets/media/Moi phat hanh/Khi Cuộc Đời Cho Bạn Quả Quýt/f9197908357fe5ff6b4887a2752bf6ef.webp"),
+      rating: "9.3",
+      year: "2025",
+      genres: ["Chính Kịch", "Tình Cảm", "Cổ Điển", "Tâm Lý", "Lãng Mạn"],
+      description:
+        "Ở Jeju, câu chuyện về một cô nàng nhiệt huyết và chàng trai kiên cường trên đảo nảy nở thành câu chuyện trọn đời đầy thăng trầm, minh chứng tình yêu vẫn trường tồn theo thời gian.",
+      duration: "1h 00m",
+      country: "Hàn Quốc",
+      directors: ["Im Sang-choon", "Kim Won-suk"],
+      actors: ["IU", "Park Bo-gum", "Moon So-ri", "Park Hae-jun"],
     },
     {
       id: 3,
-      video: require("../../../assets/home/trailer.mp4"),
-      title: "Avengers: Hồi Kết",
+      video: require("../../../assets/media/Xu huong/Học Viện Siêu Anh Hùng/My Hero Academia- You're Next Official English Subtitled Trailer.mp4"),
+      posterUrl: require("../../../assets/media/Xu huong/Học Viện Siêu Anh Hùng/fb4207975c08cb1b7cb443cfbc12b37a.webp"),
+      title: "Học Viện Siêu Anh Hùng",
+      rating: "7.0",
+      year: "2024",
+      genres: ["Hành Động", "Khoa Học", "Anime", "Hoạt Hình", "Phiêu Lưu"],
+      description:
+        'Vào mùa xuân năm thứ hai, trong khi Nhật Bản đang bị tàn phá bởi các cuộc chiến, một người đàn ông bí ẩn bất ngờ xuất hiện có tên là Dark Might. Đối mặt với Deku và những người bạn, hắn tự xưng mình là biểu tượng mới thay thế All Might với tuyên bố hùng hồn: "Tiếp theo là đến lượt ta!". Với dã tâm của mình, Dark Might sử dụng năng lực để tạo ra một pháo đài khổng lồ và nhốt người dân cùng anh hùng vào đó. Deku, Bakugo, Todoroki cùng lớp 1-A của trường U.A. dũng cảm đối đầu với Dark Might và tổ chức tội phạm bí ẩn do hắn cầm đầu, mang tên "Gia đình Gollini". Liệu họ có thể ngăn chặn tham vọng của biểu tượng mới Dark Might và bảo vệ thế giới?',
+      duration: "1h 50m",
+      country: "Nhật Bản",
+      directors: ["Tensai Okamura"],
+      actors: [
+        "Daiki Yamashita",
+        "Nobuhiko Okamoto",
+        "Yûki Kaji",
+        "Mamoru Miyano",
+        "Meru Nukumi",
+        "Kenta Miyake",
+        "Ayane Sakura",
+        "Kaito Ishikawa",
+      ],
+      weeklyViews: "32000",
     },
   ];
 
@@ -95,7 +146,9 @@ const HomeMovie = ({ navigation }) => {
         />
         <View style={styles.posterContent}>
           <Text style={styles.title}>{item.title}</Text>
-          <TouchableOpacity onPress={() => console.log("Play button pressed")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("DetailPage", { item })}
+          >
             <LinearGradient
               colors={COLORS.gradient}
               start={{ x: 0, y: 0 }}
