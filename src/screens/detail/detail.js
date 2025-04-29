@@ -100,7 +100,7 @@ const DetailPage = () => {
         showsVerticalScrollIndicator={false}
       >
         <Image
-          source={localImages[item.posterUrl]}
+          source={localImages[item.posterUrl] || item.posterUrl}
           style={styles.poster}
           resizeMode="stretch"
         />
@@ -151,7 +151,9 @@ const DetailPage = () => {
               <Text style={styles.sectionTitle}>Thể loại:</Text>
             </View>
             <View style={styles.infoBlock}>
-              <Text style={styles.info}>{item.genres.join(", ")}</Text>
+              <Text style={styles.info}>
+                {item.genres ? item.genres.join(", ") : ""}
+              </Text>
             </View>
           </View>
           <View style={styles.infoRow}>
