@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   FlatList,
@@ -20,30 +19,11 @@ import CategoryRecommend from "../../components/home/MovieList/MovieRecommend";
 const DetailPage = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const scrollViewRef = useRef(null);
-  const { item } = route.params; // Nhận toàn bộ item từ route.params
+  const { item } = route.params;
   const [isFavorite, setIsFavorite] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { isLoggedIn } = useAuth();
-
-  // Cuộn lên đầu trang khi item thay đổi
-  useEffect(() => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({ y: 0, animated: true });
-    }
-  }, [item]);
-
-  // Kiểm tra đăng nhập ngay khi vào trang
-  useEffect(() => {
-    if (!isLoggedIn) {
-      setShowLoginModal(true);
-    }
-  }, [isLoggedIn]);
-
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-  };
 
   const cast = [
     {
@@ -75,6 +55,103 @@ const DetailPage = () => {
     </View>
   );
 
+  const renderHeader = () => (
+    <>
+      <Image
+        source={localImages[item.posterUrl] || item.posterUrl}
+        style={styles.poster}
+        resizeMode="stretch"
+      />
+
+      <View style={styles.content}>
+        <View style={styles.titleContainer}>
+          <View style={styles.titleSection}>
+            <Text style={styles.title} numberOfLines={2}>
+              {item.title}
+            </Text>
+          </View>
+          <View style={styles.ratingFavoriteContainer}>
+            <View style={styles.ratingContainer}>
+              <FontAwesome name="star" size={16} color="#FDC252" />
+              <Text style={styles.rating}>{item.rating}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={toggleFavorite}
+              style={styles.favoriteButton}
+            >
+              <FontAwesome
+                name={isFavorite ? "heart" : "heart-o"}
+                size={24}
+                color={isFavorite ? "#FF0000" : "#FFF"}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Text style={styles.overview}>{item.description}</Text>
+        <View style={styles.infoRow}>
+          <View style={styles.sectionBlock}>
+            <Text style={styles.sectionTitle}>Thời lượng: </Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.info}>{item.duration}</Text>
+          </View>
+        </View>
+        <View style={styles.infoRow}>
+          <View style={styles.sectionBlock}>
+            <Text style={styles.sectionTitle}>Phát hành:</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.info}>{item.year}</Text>
+          </View>
+        </View>
+        <View style={styles.infoRow}>
+          <View style={styles.sectionBlock}>
+            <Text style={styles.sectionTitle}>Thể loại:</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.info}>
+              {item.genres ? item.genres.join(", ") : ""}
+            </Text>
+          </View>
+        </View>
+        <View style={styles.infoRow}>
+          <View style={styles.sectionBlock}>
+            <Text style={styles.sectionTitle}>Quốc gia: </Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.info}>{item.country}</Text>
+          </View>
+        </View>
+        <View style={styles.infoRow}>
+          <View style={styles.sectionBlock}>
+            <Text style={styles.sectionTitle}>Đạo diễn:</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.info}>{item.director}</Text>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.castSection}>
+        <Text style={styles.sectionHeader}>Diễn viên</Text>
+        <FlatList
+          data={cast}
+          renderItem={renderCastItem}
+          keyExtractor={(item) => item.id}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.castList}
+        />
+      </View>
+
+      <CategoryRecommend />
+    </>
+  );
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+  };
+
   const handleWatchMovie = () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -94,146 +171,55 @@ const DetailPage = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={styles.scrollContainer}
+      <FlatList
+        data={[1]} // Dummy data để render một lần
+        renderItem={() => null}
+        ListHeaderComponent={renderHeader}
+        ListFooterComponent={Footer}
         showsVerticalScrollIndicator={false}
-      >
-        <Image
-          source={localImages[item.posterUrl] || item.posterUrl}
-          style={styles.poster}
-          resizeMode="stretch"
-        />
+      />
 
-        <View style={styles.content}>
-          <View style={styles.titleContainer}>
-            <View style={styles.titleSection}>
-              <Text style={styles.title} numberOfLines={2}>
-                {item.title}
-              </Text>
-            </View>
-            <View style={styles.ratingFavoriteContainer}>
-              <View style={styles.ratingContainer}>
-                <FontAwesome name="star" size={16} color="#FDC252" />
-                <Text style={styles.rating}>{item.rating}</Text>
-              </View>
+      {/* Login Modal */}
+      <Modal
+        visible={showLoginModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          setShowLoginModal(false);
+          navigation.goBack();
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Thông báo</Text>
+            <Text style={styles.modalText}>
+              Vui lòng đăng nhập để tiếp tục xem phim này
+            </Text>
+            <View style={styles.modalButtons}>
               <TouchableOpacity
-                onPress={toggleFavorite}
-                style={styles.favoriteButton}
+                style={[styles.modalButton, styles.loginButton]}
+                onPress={handleLoginPress}
               >
-                <FontAwesome
-                  name={isFavorite ? "heart" : "heart-o"}
-                  size={24}
-                  color={isFavorite ? "#FF0000" : "#FFF"}
-                />
+                <Text style={styles.loginButtonText}>Đăng nhập</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.closeButton]}
+                onPress={() => {
+                  setShowLoginModal(false);
+                  navigation.goBack();
+                }}
+              >
+                <Text style={styles.closeButtonText}>Đóng</Text>
               </TouchableOpacity>
             </View>
           </View>
-          <Text style={styles.overview}>{item.description}</Text>
-          <View style={styles.infoRow}>
-            <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Thời lượng: </Text>
-            </View>
-            <View style={styles.infoBlock}>
-              <Text style={styles.info}>{item.duration}</Text>
-            </View>
-          </View>
-          <View style={styles.infoRow}>
-            <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Phát hành:</Text>
-            </View>
-            <View style={styles.infoBlock}>
-              <Text style={styles.info}>{item.year}</Text>
-            </View>
-          </View>
-          <View style={styles.infoRow}>
-            <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Thể loại:</Text>
-            </View>
-            <View style={styles.infoBlock}>
-              <Text style={styles.info}>
-                {item.genres ? item.genres.join(", ") : ""}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.infoRow}>
-            <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Quốc gia: </Text>
-            </View>
-            <View style={styles.infoBlock}>
-              <Text style={styles.info}>{item.country}</Text>
-            </View>
-          </View>
-          <View style={styles.infoRow}>
-            <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Đạo diễn:</Text>
-            </View>
-            <View style={styles.infoBlock}>
-              <Text style={styles.info}>{item.director}</Text>
-            </View>
-          </View>
         </View>
+      </Modal>
 
-        {/* Cast section */}
-        <View style={styles.castSection}>
-          <Text style={styles.sectionHeader}>Diễn viên</Text>
-          <FlatList
-            data={cast}
-            renderItem={renderCastItem}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.castList}
-          />
-        </View>
-
-        {/* Recommended Movies */}
-        <CategoryRecommend />
-
-        <Footer />
-
-        {/* Login Modal */}
-        <Modal
-          visible={showLoginModal}
-          transparent={true}
-          animationType="fade"
-          onRequestClose={() => {
-            setShowLoginModal(false);
-            navigation.goBack();
-          }}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Thông báo</Text>
-              <Text style={styles.modalText}>
-                Vui lòng đăng nhập để tiếp tục xem phim này
-              </Text>
-              <View style={styles.modalButtons}>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.loginButton]}
-                  onPress={handleLoginPress}
-                >
-                  <Text style={styles.loginButtonText}>Đăng nhập</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.closeButton]}
-                  onPress={() => {
-                    setShowLoginModal(false);
-                    navigation.goBack();
-                  }}
-                >
-                  <Text style={styles.closeButtonText}>Đóng</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-
-        {/* AuthModal */}
-        {showAuthModal && (
-          <AuthModal visible={showAuthModal} onClose={handleCloseAuthModal} />
-        )}
-      </ScrollView>
+      {/* AuthModal */}
+      {showAuthModal && (
+        <AuthModal visible={showAuthModal} onClose={handleCloseAuthModal} />
+      )}
     </View>
   );
 };
