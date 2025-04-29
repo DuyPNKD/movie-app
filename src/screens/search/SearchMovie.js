@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,41 +8,73 @@ import {
   FlatList,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { COLORS } from "../../constants/colors";
+import moviesData from "../../data/movies.json";
+import { loadMovies } from "../../services/movieService";
+import { localImages } from "../../utils/localImages";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const SearchMovie = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeFilter, setActiveFilter] = useState(0);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+  const [allMovies, setAllMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data - sau này sẽ thay bằng API call thực tế
-  const filters = [
-    { id: "all", name: "Tất cả" },
-    { id: "movie", name: "Phim lẻ" },
-    { id: "series", name: "Phim bộ" },
-    { id: "anime", name: "Hoạt hình" },
+  const categories = [
+    { id: 0, name: "Tất cả", jsonFileName: "movies" },
+    { id: 1, name: "Đề Xuất", jsonFileName: "De xuat cho ban" },
+    { id: 2, name: "Phim Hài Hước", jsonFileName: "Hai huoc" },
+    { id: 3, name: "Phim Hành Động", jsonFileName: "Hanh dong" },
+    { id: 4, name: "Phim Hoạt Hình", jsonFileName: "Hoat hinh" },
+    { id: 5, name: "Phim Mới Phát Hành", jsonFileName: "Moi phat hanh" },
+    { id: 6, name: "Phim Phổ Biến", jsonFileName: "Pho bien" },
+    { id: 7, name: "Phim Tình Cảm", jsonFileName: "Tinh cam" },
+    { id: 8, name: "Phim Xu Hướng", jsonFileName: "Xu huong" },
   ];
 
-  const searchResults = [
-    {
-      id: 1,
-      title: "Avengers: Hồi Kết",
-      year: "2019",
-      type: "movie",
-      rating: "8.4",
-      image: require("../../../assets/home/home.png"),
-    },
-    // Thêm kết quả tìm kiếm khác
-    {
-      id: 2,
-      title: "Avengers: Hồi Kết",
-      year: "2019",
-      type: "movie",
-      rating: "8.4",
-      image: require("../../../assets/home/home.png"),
-    },
-  ];
+  // Load dữ liệu khi component mount hoặc khi activeFilter thay đổi
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const movies = await loadMovies(categories[activeFilter].jsonFileName);
+        setAllMovies(movies || []);
+        setFilteredMovies(movies || []);
+      } catch (error) {
+        console.error("Error loading movies:", error);
+        setAllMovies([]);
+        setFilteredMovies([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, [activeFilter]);
+
+  // Xử lý tìm kiếm khi searchQuery thay đổi
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+    // Loại bỏ khoảng trắng ở đầu và cuối
+    const trimmedText = text.trim();
+
+    if (trimmedText) {
+      const filtered = (allMovies || []).filter(
+        (movie) =>
+          movie.title.toLowerCase().includes(trimmedText.toLowerCase()) ||
+          movie.description.toLowerCase().includes(trimmedText.toLowerCase()) ||
+          movie.genres.some((genre) =>
+            genre.toLowerCase().includes(trimmedText.toLowerCase())
+          )
+      );
+      setFilteredMovies(filtered);
+    } else {
+      setFilteredMovies(allMovies || []);
+    }
+  };
 
   const renderFilter = ({ item }) => (
     <TouchableOpacity
@@ -66,23 +98,54 @@ const SearchMovie = ({ navigation }) => {
   const renderSearchResult = ({ item }) => (
     <TouchableOpacity
       style={styles.resultItem}
-      onPress={() => navigation.navigate("MovieDetail", { id: item.id })}
+      onPress={() => navigation.navigate("DetailPage", { item })}
     >
-      <Image source={item.image} style={styles.resultImage} />
+      <Image source={localImages[item.posterUrl]} style={styles.resultImage} />
       <View style={styles.resultInfo}>
         <Text style={styles.resultTitle}>{item.title}</Text>
         <View style={styles.resultMeta}>
           <Text style={styles.resultYear}>{item.year}</Text>
-          {/* <View style={styles.ratingContainer}>
-            <Image
-              source={require("../../../assets/home/star.png")}
-              style={styles.starIcon}
-            />
+          <View style={styles.ratingContainer}>
+            <FontAwesome name="star" size={16} color="#FDC252" />
             <Text style={styles.rating}>{item.rating}</Text>
-          </View> */}
+          </View>
+        </View>
+        <View style={styles.genresContainer}>
+          {item.genres.map((genre, index) => (
+            <Text key={index} style={styles.genreText}>
+              {genre}
+              {index < item.genres.length - 1 ? " • " : ""}
+            </Text>
+          ))}
         </View>
       </View>
     </TouchableOpacity>
+  );
+
+  const renderNotFound = () => (
+    <View style={styles.notFoundContainer}>
+      <FontAwesome name="search" size={80} color="rgba(255,255,255,0.3)" />
+      <Text style={styles.notFoundText}>
+        {searchQuery
+          ? "Không tìm thấy phim phù hợp với từ khóa tìm kiếm"
+          : "Không có phim nào trong danh mục này"}
+      </Text>
+      {searchQuery && (
+        <TouchableOpacity
+          style={styles.clearSearchButton}
+          onPress={() => handleSearch("")}
+        >
+          <Text style={styles.clearSearchText}>Xóa tìm kiếm</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+
+  const renderLoading = () => (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color={COLORS.primary} />
+      <Text style={styles.loadingText}>Đang tải dữ liệu...</Text>
+    </View>
   );
 
   return (
@@ -108,11 +171,11 @@ const SearchMovie = ({ navigation }) => {
             placeholder="Tìm kiếm phim..."
             placeholderTextColor="rgba(255,255,255,0.5)"
             value={searchQuery}
-            onChangeText={setSearchQuery}
+            onChangeText={handleSearch}
           />
           {searchQuery.length > 0 && (
             <TouchableOpacity
-              onPress={() => setSearchQuery("")}
+              onPress={() => handleSearch("")}
               style={styles.clearButton}
             >
               <Text style={styles.clearButtonText}>×</Text>
@@ -124,7 +187,7 @@ const SearchMovie = ({ navigation }) => {
       {/* Filters */}
       <View style={styles.filtersContainer}>
         <FlatList
-          data={filters}
+          data={categories}
           renderItem={renderFilter}
           keyExtractor={(item) => item.id}
           horizontal
@@ -133,12 +196,18 @@ const SearchMovie = ({ navigation }) => {
       </View>
 
       {/* Search Results */}
-      <FlatList
-        data={searchResults}
-        renderItem={renderSearchResult}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.resultsList}
-      />
+      {isLoading ? (
+        renderLoading()
+      ) : filteredMovies && filteredMovies.length > 0 ? (
+        <FlatList
+          data={filteredMovies}
+          renderItem={renderSearchResult}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.resultsList}
+        />
+      ) : (
+        renderNotFound()
+      )}
     </View>
   );
 };
@@ -267,6 +336,49 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontSize: 14,
     fontWeight: "bold",
+  },
+  genresContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  genreText: {
+    color: "rgba(255,255,255,0.7)",
+    fontSize: 14,
+    marginRight: 4,
+  },
+  notFoundContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  notFoundText: {
+    color: "rgba(255,255,255,0.7)",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
+  },
+  clearSearchButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: COLORS.primary,
+    borderRadius: 20,
+  },
+  clearSearchText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    color: "rgba(255,255,255,0.7)",
+    fontSize: 16,
+    marginTop: 10,
   },
 });
 

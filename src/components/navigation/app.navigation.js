@@ -39,7 +39,11 @@ const HomeStack = () => {
       <Stack.Screen name="CategoryRomance" component={CategoryRomance} />
       <Stack.Screen name="CategoryFun" component={CategoryFun} />
       <Stack.Screen name="CategoryDebut" component={CategoryDebut} />
-      <Stack.Screen name="SearchMovie" component={SearchMovie} />
+      <Stack.Screen
+        name="SearchMovie"
+        component={SearchMovie}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
