@@ -36,8 +36,14 @@ export const AuthProvider = ({children}) => {
             const exists = users.some((u) => u.email === newUser.email);
             if (exists) throw new Error("Email đã được đăng ký.");
 
+            // Thêm mảng favoriteMovies vào user mới
+            const userWithFavorites = {
+                ...newUser,
+                favoriteMovies: [],
+            };
+
             // Cập nhật danh sách users
-            const updatedUsers = [...users, newUser];
+            const updatedUsers = [...users, userWithFavorites];
             console.log("updatedUsers:", updatedUsers);
 
             // Lưu vào AsyncStorage
@@ -65,8 +71,11 @@ export const AuthProvider = ({children}) => {
             const foundUser = userList.find((u) => u.email === email && u.password === password);
             if (!foundUser) throw new Error("Email hoặc mật khẩu không đúng.");
 
-            setUser(foundUser);
-            await AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(foundUser));
+            // Đảm bảo người dùng có trường favoriteMovies
+            const userWithFavorites = foundUser.favoriteMovies ? foundUser : {...foundUser, favoriteMovies: []};
+
+            setUser(userWithFavorites);
+            await AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(userWithFavorites));
         } catch (err) {
             console.error("Lỗi trong login:", err.message);
             throw err;
@@ -120,7 +129,49 @@ export const AuthProvider = ({children}) => {
         }
     };
 
-    // console.log("user o auth:", user);
+    // Thêm phim vào danh sách yêu thích
+    const toggleFavoriteMovie = async (movie) => {
+        try {
+            if (!user) throw new Error("Người dùng chưa đăng nhập");
+
+            // Kiểm tra xem phim đã có trong danh sách chưa
+            const isFavorite = user.favoriteMovies.some((m) => m.id === movie.id);
+
+            let updatedFavorites;
+            if (isFavorite) {
+                // Nếu đã có, xóa khỏi danh sách
+                updatedFavorites = user.favoriteMovies.filter((m) => m.id !== movie.id);
+            } else {
+                // Nếu chưa có, thêm vào danh sách
+                updatedFavorites = [...user.favoriteMovies, movie];
+            }
+
+            // Cập nhật user trong state và AsyncStorage
+            const updatedUser = {...user, favoriteMovies: updatedFavorites};
+
+            // Cập nhật trong danh sách users
+            const updatedUsers = users.map((u) => (u.email === user.email ? updatedUser : u));
+
+            // Lưu vào AsyncStorage
+            await AsyncStorage.setItem(USERS_KEY, JSON.stringify(updatedUsers));
+            await AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(updatedUser));
+
+            // Cập nhật state
+            setUser(updatedUser);
+            setUsers(updatedUsers);
+
+            return !isFavorite; // Trả về trạng thái mới: true nếu đã thêm, false nếu đã xóa
+        } catch (err) {
+            console.error("Lỗi khi thao tác với phim yêu thích:", err.message);
+            throw err;
+        }
+    };
+
+    // Kiểm tra xem phim có trong danh sách yêu thích không
+    const isMovieFavorite = (movieId) => {
+        if (!user || !user.favoriteMovies) return false;
+        return user.favoriteMovies.some((movie) => movie.id === movieId);
+    };
 
     return (
         <AuthContext.Provider
@@ -133,6 +184,8 @@ export const AuthProvider = ({children}) => {
                 logout,
                 updateUserInfo,
                 changePassword,
+                toggleFavoriteMovie,
+                isMovieFavorite,
             }}
         >
             {children}

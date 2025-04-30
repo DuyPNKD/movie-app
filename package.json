@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-native-fontawesome": "^0.3.2",
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/slider": "^4.5.6",
     "@react-native-masked-view/masked-view": "^0.3.2",
     "@react-navigation/bottom-tabs": "^7.3.9",
     "@react-navigation/drawer": "^7.1.1",
@@ -33,7 +36,7 @@
     "react-native-screens": "~4.4.0",
     "react-native-svg": "^15.11.1",
     "react-native-vector-icons": "^10.2.0",
-    "react-native-video": "^6.12.0",
+    "react-native-video": "^6.13.0",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4"
   },

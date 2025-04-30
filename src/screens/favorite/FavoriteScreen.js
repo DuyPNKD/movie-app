@@ -1,50 +1,56 @@
-import React, {useState} from "react";
+import React from "react";
 import {View, Text, StyleSheet, Image, FlatList, TouchableOpacity, Dimensions} from "react-native";
 import {useNavigation} from "@react-navigation/native";
+import {useAuth} from "../../context/AuthContext";
+import {localImages} from "../../utils/localImages";
 
 const {width} = Dimensions.get("window");
 const movieWidth = (width - 40) / 2;
 
 const FavoriteScreen = () => {
     const navigation = useNavigation();
-    const [favorites, setFavorites] = useState([
-        {
-            id: "1",
-            title: "The Wild",
-            poster: require("../../../assets/recommend/poster1.jpg"),
-        },
-        {
-            id: "2",
-            title: "The Wild Robot",
-            poster: require("../../../assets/recommend/poster2.jpg"),
-        },
-        {
-            id: "3",
-            title: "Mes Autres Vies De Chien",
-            poster: require("../../../assets/recommend/poster3.jpg"),
-        },
-        {
-            id: "4",
-            title: "Mavka",
-            poster: require("../../../assets/recommend/poster4.webp"),
-        },
-    ]);
+    const {user, isLoggedIn} = useAuth();
+
+    // Lấy danh sách yêu thích từ user hiện tại
+    const favorites = isLoggedIn && user ? user.favoriteMovies : [];
 
     const renderMovieItem = ({item}) => (
-        <TouchableOpacity style={styles.movieItem} onPress={() => navigation.navigate("DetailPage", {id: item.id})}>
-            <Image source={item.poster} style={styles.movieImage} />
+        <TouchableOpacity style={styles.movieItem} onPress={() => navigation.navigate("DetailPage", {item})}>
+            <Image source={localImages[item.posterUrl]} style={styles.movieImage} resizeMode="cover" />
             <Text style={styles.movieTitle} numberOfLines={2}>
                 {item.title}
             </Text>
         </TouchableOpacity>
     );
 
+    // Hiển thị thông báo nếu không đăng nhập
+    if (!isLoggedIn) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.headerText}>Danh sách yêu thích</Text>
+                <View style={styles.emptyContainer}>
+                    <Text style={styles.emptyText}>Bạn chưa đăng nhập</Text>
+                    <Text style={styles.emptySubText}>Đăng nhập để xem danh sách phim yêu thích của bạn</Text>
+                    <TouchableOpacity
+                        style={styles.homeButton}
+                        onPress={() => {
+                            navigation.navigate("Profile");
+                        }}
+                    >
+                        <Text style={styles.homeButtonText}>Đăng nhập</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    }
+
+    // Hiển thị thông báo khi không có phim yêu thích
     if (favorites.length === 0) {
         return (
             <View style={styles.container}>
                 <Text style={styles.headerText}>Danh sách yêu thích</Text>
                 <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>Không có gì</Text>
+                    <Text style={styles.emptyText}>Không có phim yêu thích</Text>
                     <Text style={styles.emptySubText}>Vào trang chủ để thêm phim mới vào danh sách</Text>
                     <TouchableOpacity
                         style={styles.homeButton}
@@ -65,7 +71,7 @@ const FavoriteScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.headerText}>Danh sách yêu thích</Text>
-            <FlatList data={favorites} renderItem={renderMovieItem} keyExtractor={(item) => item.id} numColumns={2} contentContainerStyle={styles.listContainer} showsVerticalScrollIndicator={false} />
+            <FlatList data={favorites} renderItem={renderMovieItem} keyExtractor={(item) => item.id.toString()} numColumns={2} contentContainerStyle={styles.listContainer} showsVerticalScrollIndicator={false} />
         </View>
     );
 };

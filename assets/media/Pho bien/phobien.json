@@ -10,7 +10,7 @@
         "actors": ["Park Seo-jun", "Ahn Sung-ki", "Woo Do-hwan", "Choi Woo-shik", "Park Ji-hyun", "Jung Ji-hoon", "Lee Seung-hee", "Sim Hee-seop"],
         "id": 1,
         "title": "Bàn Tay Diệt Quỷ",
-        "videoUrl": "media/Pho bien/Bàn Tay Diệt Quỷ/The Divine Fury Trailer #1 (2019) - Movieclips Indie.mp4",
+        "videoUrl": "media/Pho bien/Bàn Tay Diệt Quỷ/Ban_Tay_Diet_Quy.mp4",
         "posterUrl": "media/Pho bien/Bàn Tay Diệt Quỷ/7be7a0c1b3f193b5557ef4f00b1f05d9.webp",
         "views": "150000"
     },
@@ -25,7 +25,7 @@
         "actors": ["Hyun Bin", "Yoo Hai-jin", "Kim Joo-hyuk", "Jang Young-nam", "Lee Dong-hwi", "Yoona", "Jeong-hwan Kong", "Lee Hae-yeong"],
         "id": 2,
         "title": "Cộng Sự Bất Đắc Dĩ",
-        "videoUrl": "media/Pho bien/Cộng Sự Bất Đắc Dĩ/Confidential Assignment Official Trailer 1 (2017) - Hyun Bin Movie.mp4",
+        "videoUrl": "media/Pho bien/Cộng Sự Bất Đắc Dĩ/Cong_Su_Bat_Dac_Di.mp4",
         "posterUrl": "media/Pho bien/Cộng Sự Bất Đắc Dĩ/2704d4778783eb7028e8605f128bfae3.webp",
         "views": "180000"
     },
@@ -40,7 +40,7 @@
         "actors": ["Dylan O'Brien", "Kaya Scodelario", "Aml Ameen", "Thomas Brodie-Sangster", "Ki Hong Lee", "Will Poulter", "Patricia Clarkson", "Blake Cooper"],
         "id": 3,
         "title": "Giải Mã Mê Cung",
-        "videoUrl": "media/Pho bien/Giải Mã Mê Cung/The Maze Runner - Official Trailer [HD] - 20th Century FOX.mp4",
+        "videoUrl": "media/Pho bien/Giải Mã Mê Cung/Giai_Ma_Me_Cung.mp4",
         "posterUrl": "media/Pho bien/Giải Mã Mê Cung/79c7eb6d1453801f4ccd7e136ce7bb9b.webp",
         "views": "170000"
     },
@@ -55,7 +55,7 @@
         "actors": ["Joaquin Phoenix", "Robert De Niro", "Zazie Beetz", "Frances Conroy", "Brett Cullen", "Shea Whigham", "Bill Camp", "Glenn Fleshler"],
         "id": 4,
         "title": "Joker",
-        "videoUrl": "media/Pho bien/Joker/JOKER - Final Trailer - Now Playing In Theaters.mp4",
+        "videoUrl": "media/Pho bien/Joker/Joker.mp4",
         "posterUrl": "media/Pho bien/Joker/4fae6d95653559785b89387ee01c4501.webp",
         "views": "200000"
     },
@@ -70,7 +70,7 @@
         "actors": ["Taron Egerton", "Colin Firth", "Samuel L. Jackson", "Mark Strong", "Sophie Cookson", "Sofia Boutella", "Michael Caine", "Mark Hamill"],
         "id": 5,
         "title": "Mật Vụ Kingsman",
-        "videoUrl": "media/Pho bien/Mật Vụ Kingsman/Kingsman- The Secret Service - Official Trailer 2 [HD] - 20th Century FOX.mp4",
+        "videoUrl": "media/Pho bien/Mật Vụ Kingsman/Mat_Vu_Kingsman.mp4",
         "posterUrl": "media/Pho bien/Mật Vụ Kingsman/f91a03a1032e1c80107d4240f52bf25f.webp",
         "views": "300000"
     },
@@ -85,7 +85,7 @@
         "actors": ["Dakota Johnson", "Jamie Dornan", "Jennifer Ehle", "Eloise Mumford", "Victor Rasuk", "Luke Grimes", "Marcia Gay Harden", "Rita Ora"],
         "id": 6,
         "title": "Năm Mươi Sắc Thái",
-        "videoUrl": "media/Pho bien/Năm Mươi Sắc Thái/Fifty Shades of Grey - Official Trailer (HD).mp4",
+        "videoUrl": "media/Pho bien/Năm Mươi Sắc Thái/Nam_Muoi_Sac_Thai.mp4",
         "posterUrl": "media/Pho bien/Năm Mươi Sắc Thái/edd9889eef96baec794f0aa88bcc48c9.webp",
         "views": "210000"
     },
@@ -100,7 +100,7 @@
         "actors": ["Benedict Cumberbatch", "Chiwetel Ejiofor", "Rachel McAdams", "Benedict Wong", "Mads Mikkelsen", "Tilda Swinton", "Michael Stuhlbarg", "Benjamin Bratt"],
         "id": 7,
         "title": "Phù Thủy Tối Thượng",
-        "videoUrl": "media/Pho bien/Phù Thủy Tối Thượng/Marvel Studios' Doctor Strange in the Multiverse of Madness - Official Trailer.mp4",
+        "videoUrl": "media/Pho bien/Phù Thủy Tối Thượng/Phu_Thuy_Toi_Thuong.mp4",
         "posterUrl": "media/Pho bien/Phù Thủy Tối Thượng/5d3f386be3b1dc2e64195b29d8d3fe75.webp",
         "views": "120000"
     },
@@ -115,7 +115,7 @@
         "actors": ["Eddie Redmayne", "Katherine Waterston", "Dan Fogler", "Alison Sudol", "Colin Farrell", "Jon Voight", "Ron Perlman", "Johnny Depp"],
         "id": 8,
         "title": "Sinh Vật Huyền Bí Và Nơi Tìm Ra Chúng",
-        "videoUrl": "media/Pho bien/Sinh Vật Huyền Bí Và Nơi Tìm Ra Chúng/Fantastic Beasts and Where to Find Them - Teaser Trailer [HD].mp4",
+        "videoUrl": "media/Pho bien/Sinh Vật Huyền Bí Và Nơi Tìm Ra Chúng/Sinh_Vat_Huyen_Bi_Va_Noi_Tim_Ra_Chung.mp4",
         "posterUrl": "media/Pho bien/Sinh Vật Huyền Bí Và Nơi Tìm Ra Chúng/71d1943048c397623125ee0a94eabd9d.webp",
         "views": "130000"
     },
@@ -130,7 +130,7 @@
         "actors": ["Leonardo DiCaprio", "Jonah Hill", "Margot Robbie", "Matthew McConaughey", "Kyle Chandler", "Rob Reiner", "Jon Bernthal", "Jon Favreau"],
         "id": 9,
         "title": "Sói Già Phố Wall",
-        "videoUrl": "media/Pho bien/Sói Già Phố Wall/The Wolf of Wall Street - Official Trailer [HD].mp4",
+        "videoUrl": "media/Pho bien/Sói Già Phố Wall/Soi_Gia_Pho_Wall.mp4",
         "posterUrl": "media/Pho bien/Sói Già Phố Wall/a0440026b15517e63c3bf86cc72f1f7f.webp",
         "views": "140000"
     },
@@ -145,7 +145,7 @@
         "actors": ["Timothée Chalamet", "Calah Lane", "Keegan-Michael Key", "Hugh Grant", "Paterson Joseph", "Olivia Colman", "Tom Davis", "Jim Carter"],
         "id": 10,
         "title": "Thị Trấn Wonka",
-        "videoUrl": "media/Pho bien/Thị Trấn Wonka/WONKA - Official Trailer.mp4",
+        "videoUrl": "media/Pho bien/Thị Trấn Wonka/Thi_Tran_Wonka.mp4",
         "posterUrl": "media/Pho bien/Thị Trấn Wonka/4cbd9a645e1453cb6315be13b94e8b86.webp",
         "views": "145000"
     }
