@@ -87,10 +87,8 @@ const ProfileScreen = () => {
             <Text style={styles.subtitle}>Cập nhật thông tin tài khoản</Text>
 
             <View style={styles.avatarSection}>
+                <Text style={styles.avatarText}>Chào {user?.fullName}</Text>
                 <Image source={user?.avatar || require("../../../assets/user1.jpg")} style={styles.avatar} resizeMode="cover" />
-                <TouchableOpacity onPress={() => setShowAvatarModal(true)}>
-                    <Text style={styles.avatarText}>Đổi ảnh đại diện</Text>
-                </TouchableOpacity>
             </View>
 
             <View style={styles.formContainer}>
@@ -258,21 +256,25 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     avatarSection: {
-        alignItems: "center",
+        alignItems: "left",
         marginTop: 30,
+        flexDirection: "row",
+        alignItems: "center",
     },
     avatar: {
-        width: 100,
-        height: 100,
+        width: 50,
+        height: 50,
         borderRadius: 50,
         backgroundColor: "#1a2a3a",
         borderWidth: 2,
         borderColor: "#fff",
+        marginLeft: 10,
     },
     avatarText: {
         color: "#fff",
         marginTop: 10,
-        fontSize: 16,
+        fontSize: 20,
+        fontWeight: "bold",
     },
     formContainer: {
         marginTop: 30,

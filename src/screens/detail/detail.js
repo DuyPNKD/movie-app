@@ -1,20 +1,14 @@
-import React, { useRef, useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-} from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import React, {useRef, useState, useEffect} from "react";
+import {View, Text, Image, StyleSheet, TouchableOpacity, FlatList, ScrollView, Modal} from "react-native";
+import {useNavigation, useRoute} from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Footer from "../../components/home/Footer";
 import {useAuth} from "../../context/AuthContext";
 import AuthModal from "../../components/auth/AuthModal";
-import {localImages} from "../../utils/localImages";
+import {localVideos} from "../../utils/localVideos"; // Import file localVideos
 import CategoryRecommend from "../../components/home/MovieList/MovieRecommend";
+import {Video} from "expo-av";
+import VideoPlayer from "../../components/videoPlayer/videoPlayer"; // import component mới
 
 const DetailPage = () => {
     const route = useRoute();
@@ -25,7 +19,6 @@ const DetailPage = () => {
     const [showAuthModal, setShowAuthModal] = useState(false);
     const {isLoggedIn, user, toggleFavoriteMovie, isMovieFavorite} = useAuth();
 
-    console.log("item trong DetailPage:", item);
     // Kiểm tra đăng nhập ngay khi vào trang
     useEffect(() => {
         const currentRouteName = navigation.getState().routes[navigation.getState().index].name;
@@ -57,17 +50,14 @@ const DetailPage = () => {
         }
     };
 
-
     const handleLoginPress = () => {
         setShowLoginModal(false);
         setShowAuthModal(true);
     };
 
-
     const handleCloseAuthModal = () => {
         setShowAuthModal(false);
     };
-
 
     // Dữ liệu cho FlatList
     const data = [
@@ -77,106 +67,107 @@ const DetailPage = () => {
         {key: "footer", type: "footer"},
     ];
 
-    // Hàm render từng phần tử trong FlatList
-    const renderItem = ({item: listItem}) => {
-        switch (listItem.type) {
-            case "poster":
-                return (
-                    <Video
-                        source={{uri: item.videoUrl}} // URL của video
-                        style={styles.video} // Kiểu cho video
-                        controls={true} // Hiển thị các nút điều khiển video
-                        resizeMode="cover" // Chế độ hiển thị video
-                        paused={false} // Tự động phát video
-                    />
-                );
-            case "details":
-                return (
-                    <View style={styles.content}>
-                        <View style={styles.titleContainer}>
-                            <View style={styles.titleSection}>
-                                <Text style={styles.title} numberOfLines={2}>
-                                    {item.title}
-                                </Text>
-                            </View>
-                            <View style={styles.ratingFavoriteContainer}>
-                                <View style={styles.ratingContainer}>
-                                    <FontAwesome name="star" size={16} color="#FDC252" />
-                                    <Text style={styles.rating}>{item.rating}</Text>
-                                </View>
-                                <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
-                                    <FontAwesome name={isFavorite ? "heart" : "heart-o"} size={24} color={isFavorite ? "#FF0000" : "#FFF"} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        <Text style={styles.overview}>{item.description}</Text>
-                        <View style={styles.infoRow}>
-                            <View style={styles.sectionBlock}>
-                                <Text style={styles.sectionTitle}>Thời lượng: </Text>
-                            </View>
-                            <View style={styles.infoBlock}>
-                                <Text style={styles.info}>{item.duration}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.infoRow}>
-                            <View style={styles.sectionBlock}>
-                                <Text style={styles.sectionTitle}>Phát hành:</Text>
-                            </View>
-                            <View style={styles.infoBlock}>
-                                <Text style={styles.info}>{item.year}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.infoRow}>
-                            <View style={styles.sectionBlock}>
-                                <Text style={styles.sectionTitle}>Thể loại:</Text>
-                            </View>
-                            <View style={styles.infoBlock}>
-                                <Text style={styles.info}>{item.genres.join(", ")}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.infoRow}>
-                            <View style={styles.sectionBlock}>
-                                <Text style={styles.sectionTitle}>Quốc gia: </Text>
-                            </View>
-                            <View style={styles.infoBlock}>
-                                <Text style={styles.info}>{item.country}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.infoRow}>
-                            <View style={styles.sectionBlock}>
-                                <Text style={styles.sectionTitle}>Đạo diễn:</Text>
-                            </View>
-                            <View style={styles.infoBlock}>
-                                <Text style={styles.info}>{item.directors}</Text>
-                            </View>
-                        </View>
-                        <View style={styles.infoRow}>
-                            <View style={styles.sectionBlock}>
-                                <Text style={styles.sectionTitle}>Diễn Viên:</Text>
-                            </View>
-                            <View style={styles.infoBlock}>
-                                <Text style={styles.info}>{item.actors}</Text>
-                            </View>
-                        </View>
-                    </View>
-                );
-            case "recommend":
-                return (
-                    <View>
-                        <Text style={styles.recommendTitle}>Đề xuất cho bạn</Text>
-                        <CategoryRecommend />
-                    </View>
-                );
-            case "footer":
-                return <Footer />;
-            default:
-                return null;
-        }
-    };
+    const videoSource = localVideos[item.videoUrl]; // Lấy video từ localVideos
 
     return (
         <View style={styles.container}>
-            <FlatList data={data} renderItem={renderItem} keyExtractor={(item) => item.key} showsVerticalScrollIndicator={false} />
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {/* VIDEO */}
+                {videoSource ? (
+                    <View style={styles.videos}>
+                        <VideoPlayer source={videoSource} />
+                    </View>
+                ) : (
+                    <View style={styles.videoErrorContainer}>
+                        <Text style={styles.videoErrorText}>Không tìm thấy video phù hợp</Text>
+                    </View>
+                )}
+
+                {/* DETAILS */}
+                <View style={styles.content}>
+                    <View style={styles.titleContainer}>
+                        <View style={styles.titleSection}>
+                            <Text style={styles.title} numberOfLines={2}>
+                                {item.title}
+                            </Text>
+                        </View>
+                        <View style={styles.ratingFavoriteContainer}>
+                            <View style={styles.ratingContainer}>
+                                <FontAwesome name="star" size={16} color="#FDC252" />
+                                <Text style={styles.rating}>{item.rating}</Text>
+                            </View>
+                            <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteButton}>
+                                <FontAwesome name={isFavorite ? "heart" : "heart-o"} size={24} color={isFavorite ? "#FF0000" : "#FFF"} />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    <Text style={styles.overview}>{item.description}</Text>
+
+                    <View style={styles.infoRow}>
+                        <View style={styles.sectionBlock}>
+                            <Text style={styles.sectionTitle}>Thời lượng:</Text>
+                        </View>
+                        <View style={styles.infoBlock}>
+                            <Text style={styles.info}>{item.duration}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                        <View style={styles.sectionBlock}>
+                            <Text style={styles.sectionTitle}>Phát hành:</Text>
+                        </View>
+                        <View style={styles.infoBlock}>
+                            <Text style={styles.info}>{item.year}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                        <View style={styles.sectionBlock}>
+                            <Text style={styles.sectionTitle}>Thể loại:</Text>
+                        </View>
+                        <View style={styles.infoBlock}>
+                            <Text style={styles.info}>{item.genres.join(", ")}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                        <View style={styles.sectionBlock}>
+                            <Text style={styles.sectionTitle}>Quốc gia:</Text>
+                        </View>
+                        <View style={styles.infoBlock}>
+                            <Text style={styles.info}>{item.country}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                        <View style={styles.sectionBlock}>
+                            <Text style={styles.sectionTitle}>Đạo diễn:</Text>
+                        </View>
+                        <View style={styles.infoBlock}>
+                            <Text style={styles.info}>{item.directors}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.infoRow}>
+                        <View style={styles.sectionBlock}>
+                            <Text style={styles.sectionTitle}>Diễn Viên:</Text>
+                        </View>
+                        <View style={styles.infoBlock}>
+                            <Text style={styles.info}>{item.actors}</Text>
+                        </View>
+                    </View>
+                </View>
+
+                {/* RECOMMEND */}
+                <View>
+                    <Text style={styles.recommendTitle}>Đề xuất cho bạn</Text>
+                    <CategoryRecommend />
+                </View>
+
+                {/* FOOTER */}
+                <Footer />
+            </ScrollView>
 
             {/* Login Modal */}
             <Modal
@@ -210,11 +201,11 @@ const DetailPage = () => {
                 </View>
             </Modal>
 
-            {/* AuthModal */}
+            {/* Auth Modal */}
             {showAuthModal && <AuthModal visible={showAuthModal} onClose={handleCloseAuthModal} />}
         </View>
     );
-
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -412,10 +403,23 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginTop: 50,
     },
-    video: {
-        width: "100%",
-        height: 350,
+    videos: {
+        width: "100%", // Chiều rộng 100% màn hình
+        height: 200, // Chiều cao 100% màn hình
+        backgroundColor: "#000", // Đặt nền đen cho video
         marginTop: 80,
+    },
+    videoErrorContainer: {
+        height: 200,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#111",
+        marginBottom: 10,
+        borderRadius: 10,
+    },
+    videoErrorText: {
+        color: "red",
+        fontSize: 16,
     },
 });
 
