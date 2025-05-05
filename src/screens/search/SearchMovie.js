@@ -10,9 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { COLORS } from "../../constants/colors";
-import moviesData from "../../data/movies.json";
 import { loadMovies } from "../../services/movieService";
 import { localImages } from "../../utils/localImages";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
