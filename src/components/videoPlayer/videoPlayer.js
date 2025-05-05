@@ -5,6 +5,7 @@ import {Video} from "expo-av";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {faExpand, faPause, faPlay} from "@fortawesome/free-solid-svg-icons";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 // Utility function to format time (mm:ss)
 const formatTime = (millis) => {
@@ -20,8 +21,23 @@ const VideoPlayer = ({source}) => {
     const [status, setStatus] = useState({});
     const [showOverlay, setShowOverlay] = useState(true);
     const [fadeTimeout, setFadeTimeout] = useState(null);
-    const [volume, setVolume] = useState(1.0); // Volume state (0.0 to 1.0)
     const [isMuted, setIsMuted] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    // Hàm thay đổi hướng màn hình
+    const changeScreenOrientation = async (isFullscreen) => {
+        try {
+            if (isFullscreen) {
+                // Xoay ngang (landscape)
+                await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+            } else {
+                // Khôi phục dọc (portrait)
+                await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+            }
+        } catch (error) {
+            console.error("Error changing screen orientation:", error);
+        }
+    };
 
     // Toggle play/pause
     const togglePlayPause = () => {
@@ -32,6 +48,25 @@ const VideoPlayer = ({source}) => {
         }
         setShowOverlay(true);
         resetFadeTimer();
+    };
+
+    // Toggle fullscreen và xoay màn hình
+    const toggleFullscreen = async () => {
+        try {
+            if (isFullscreen) {
+                await video.current.dismissFullscreenPlayer();
+                setIsFullscreen(false);
+                await changeScreenOrientation(false); // Khôi phục portrait
+            } else {
+                await video.current.presentFullscreenPlayer();
+                setIsFullscreen(true);
+                await changeScreenOrientation(true); // Xoay landscape
+            }
+            setShowOverlay(true);
+            resetFadeTimer();
+        } catch (error) {
+            console.error("Error toggling fullscreen:", error);
+        }
     };
 
     // Handle seeking with the slider
@@ -71,7 +106,7 @@ const VideoPlayer = ({source}) => {
         }
         const timeout = setTimeout(() => {
             setShowOverlay(false);
-        }, 5000); // Hide overlay after 3 seconds of inactivity
+        }, 5000);
         setFadeTimeout(timeout);
     };
 
@@ -93,55 +128,71 @@ const VideoPlayer = ({source}) => {
         };
     }, [status.isPlaying]);
 
+    // Xử lý sự kiện thay đổi trạng thái toàn màn hình
+    useEffect(() => {
+        const handleFullscreenUpdate = async ({fullscreen}) => {
+            setIsFullscreen(fullscreen);
+            await changeScreenOrientation(fullscreen);
+        };
+
+        // Đăng ký sự kiện onFullscreenUpdate
+        const subscription = video.current ? {onFullscreenUpdate: handleFullscreenUpdate} : null;
+
+        return () => {
+            if (subscription) {
+                // Cleanup nếu cần
+            }
+            // Khôi phục hướng dọc khi component unmount
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+        };
+    }, []);
+
     return (
         <View style={styles.container}>
-            {/* Video component */}
-            <Video ref={video} source={source} style={styles.video} resizeMode="cover" useNativeControls={false} onPlaybackStatusUpdate={setStatus} />
-
-            {/* Overlay layer */}
+            <Video
+                ref={video}
+                source={source}
+                style={styles.video}
+                resizeMode={isFullscreen ? "contain" : "cover"}
+                useNativeControls={false}
+                onPlaybackStatusUpdate={setStatus}
+                onFullscreenUpdate={({fullscreen}) => {
+                    setIsFullscreen(fullscreen);
+                    changeScreenOrientation(fullscreen);
+                }}
+            />
             <TouchableOpacity style={styles.overlay} onPress={handleOverlayPress} activeOpacity={1}>
                 {showOverlay && (
                     <View style={styles.overlayContent}>
-                        {/* Center controls: Play/Pause and Seek */}
                         <View style={styles.centerControls}>
                             <TouchableOpacity onPress={seekBackward}>
                                 <FontAwesome name="backward" size={30} color="#fff" />
                                 <Text style={styles.seekText}>10</Text>
                             </TouchableOpacity>
-
                             <TouchableOpacity onPress={togglePlayPause} style={styles.playButton}>
                                 <FontAwesomeIcon icon={status.isPlaying ? faPause : faPlay} size={40} color="#fff" />
                             </TouchableOpacity>
-
                             <TouchableOpacity onPress={seekForward}>
                                 <FontAwesome name="forward" size={30} color="#fff" />
                                 <Text style={styles.seekText}>10</Text>
                             </TouchableOpacity>
                         </View>
-
-                        {/* Progress bar and time display */}
                         <View style={styles.progressContainer}>
                             <Text style={styles.timeText}>{formatTime(status.positionMillis)}</Text>
                             <Slider style={styles.slider} minimumValue={0} maximumValue={status.durationMillis || 0} value={status.positionMillis || 0} onSlidingComplete={handleSeek} minimumTrackTintColor="#1e90ff" maximumTrackTintColor="#666" thumbTintColor="#fff" />
                             <Text style={styles.timeText}>{formatTime(status.durationMillis)}</Text>
                         </View>
-
-                        {/* Bottom controls: Play, Volume, Fullscreen */}
                         <View style={styles.bottomControls}>
-                            {/* Nhóm bên trái */}
                             <View style={styles.leftControls}>
-                                <TouchableOpacity onPress={togglePlayPause} style={styles.playButton}>
+                                <TouchableOpacity onPress={togglePlayPause} style={styles.controlButton}>
                                     <FontAwesomeIcon icon={status.isPlaying ? faPause : faPlay} size={20} color="#fff" />
                                 </TouchableOpacity>
-
                                 <TouchableOpacity onPress={toggleMute} style={styles.controlButton}>
                                     <FontAwesome name={isMuted ? "volume-off" : "volume-up"} size={20} color="#fff" />
                                 </TouchableOpacity>
                             </View>
-
-                            {/* Nhóm bên phải */}
                             <View style={styles.rightControls}>
-                                <TouchableOpacity onPress={() => video.current.presentFullscreenPlayer()} style={styles.controlButton}>
+                                <TouchableOpacity onPress={toggleFullscreen} style={styles.controlButton}>
                                     <FontAwesomeIcon icon={faExpand} size={20} color="#fff" />
                                 </TouchableOpacity>
                             </View>
@@ -157,6 +208,7 @@ const styles = StyleSheet.create({
     container: {
         position: "relative",
         width: "100%",
+        alignSelf: "center",
     },
     video: {
         width: "100%",
@@ -175,7 +227,7 @@ const styles = StyleSheet.create({
     overlayContent: {
         width: "100%",
         height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
         justifyContent: "space-between",
     },
     centerControls: {
@@ -219,18 +271,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingBottom: 10,
     },
-
     leftControls: {
         flexDirection: "row",
         alignItems: "center",
         gap: 20,
     },
-
     rightControls: {
         flexDirection: "row",
         alignItems: "center",
     },
-
     controlButton: {
         padding: 8,
     },
