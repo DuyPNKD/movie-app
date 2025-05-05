@@ -71,7 +71,7 @@ const VideoPlayer = ({source}) => {
         }
         const timeout = setTimeout(() => {
             setShowOverlay(false);
-        }, 10000); // Hide overlay after 3 seconds of inactivity
+        }, 5000); // Hide overlay after 3 seconds of inactivity
         setFadeTimeout(timeout);
     };
 
